@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Damroo - Live Premium Player</title>
-    <!-- FontAwesome for Premium Icons -->
+    <title>Radio Damroo - Etawah Ka Apna Premium Radio</title>
+    <!-- FontAwesome Icons for clean premium look -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- DESIGN SYSTEM (Red, Yellow & Deep Dark Black Theme) --- */
@@ -33,7 +33,7 @@
             overflow-x: hidden;
         }
 
-        /* --- Scrollbar Style --- */
+        /* --- Custom Premium Scrollbar --- */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -68,6 +68,7 @@
             padding: 12px 15px;
         }
 
+        /* CLEAN AND SIMPLE LOGO STYLE */
         .logo {
             display: flex;
             align-items: center;
@@ -75,6 +76,7 @@
             cursor: pointer;
         }
 
+        /* Logo Image Style */
         .logo-img {
             max-height: 50px;
             width: auto;
@@ -87,7 +89,7 @@
             transform: scale(1.05);
         }
 
-        /* Responsive Navigation Menu */
+        /* Responsive Navigation Menu with no overlap */
         nav ul {
             display: flex;
             list-style: none;
@@ -110,6 +112,7 @@
             border-bottom: 2px solid var(--primary-yellow);
         }
 
+        /* Responsive menu for Mobile screens */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -181,6 +184,13 @@
             margin-bottom: 15px;
         }
 
+        /* Style when station is offline */
+        .live-badge.offline-badge {
+            background: #444;
+            animation: none;
+            box-shadow: none;
+        }
+
         #current-show-title {
             font-size: 32px;
             font-weight: 800;
@@ -211,7 +221,7 @@
             margin-bottom: 20px;
         }
 
-        /* Animated waves representing audio beats */
+        /* Custom Audio Waves (Playing state visual) */
         .waves-box {
             display: flex;
             align-items: flex-end;
@@ -227,6 +237,12 @@
             background: linear-gradient(to top, var(--primary-red), var(--primary-yellow));
             border-radius: 3px;
             animation: wave-movement 1s ease-in-out infinite alternate;
+        }
+
+        /* Stop waves when offline */
+        .waves-box.offline-waves .wave-bar {
+            animation: none;
+            height: 6px !important;
         }
 
         .wave-bar:nth-child(2) { animation-delay: 0.1s; }
@@ -283,6 +299,7 @@
             position: relative;
         }
 
+        /* Ensuring any loaded Caster FM iframe fits beautifully on all screens */
         .caster-embed-area iframe, 
         .caster-embed-area .cstrEmbed {
             width: 100% !important;
@@ -321,7 +338,7 @@
             border-radius: 2px;
         }
 
-        /* --- Grid Utilities --- */
+        /* --- Grid Layout --- */
         .grid-layout {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -427,6 +444,12 @@
             border-left: 4px solid var(--primary-yellow);
         }
 
+        /* Styling for offline table row */
+        .schedule-row.active.offline-row {
+            background: rgba(255, 255, 255, 0.03);
+            border-left-color: #666;
+        }
+
         .schedule-time {
             font-size: 13px;
             color: var(--text-gray);
@@ -443,6 +466,11 @@
             font-size: 14px;
         }
 
+        /* For offline RJ display */
+        .offline-row .schedule-rj {
+            color: #888;
+        }
+
         .schedule-status {
             font-size: 11px;
             font-weight: bold;
@@ -457,6 +485,13 @@
             background: var(--primary-red);
             color: white;
             animation: pulse-border 1.5s infinite;
+        }
+
+        /* Offline status display in table */
+        .schedule-row.active.offline-row .schedule-status {
+            background: #333;
+            color: #aaa;
+            animation: none;
         }
 
         /* --- Comment System --- */
@@ -589,11 +624,10 @@
 </head>
 <body>
 
-    <!-- Header / Navbar Section -->
+    <!-- Header / Navbar Section with Clean logo.png -->
     <header>
         <div class="nav-container">
             <a href="#" class="logo">
-                <!-- Direct logo file linked. On error, a solid yellow fallback SVG dummy logo loads. -->
                 <img src="logo.png" alt="Radio Damroo" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x50/121212/ffcc00?text=Radio+Damroo';">
             </a>
             <nav>
@@ -615,7 +649,7 @@
             
             <!-- Show Details (Dynamic Real-Time RJ & Show Info based on User Device Local Time) -->
             <div class="player-info-card">
-                <div class="live-badge">
+                <div class="live-badge" id="live-indicator-badge">
                     <i class="fa-solid fa-circle"></i> Live Now
                 </div>
                 
@@ -670,46 +704,79 @@
 
         <!-- About Us Section -->
         <section id="about">
-            <h2 class="section-title">Radio Damroo Ke Baare Mein</h2>
+            <h2 class="section-title">About Radio Damroo</h2>
             <div class="about-box">
-                <p><strong>Radio Damroo</strong> Etawah shehar ka sabse behtareen aur hit digital radio station hai. Hamara uddeshya aapko pure non-stop high-quality music aur entertainment se jode rakhna hai. Hamare sabhi RJs alag-alag unique concepts aur shows ke sath 24 ghante live rahte hain.</p>
-                <p>Hamari website aur android platforms ke jariye hum digital media me sabse saaf aur behtareen sound experience deliver karte hain. Damroo bajega toh entertainment badhega!</p>
+                <p><strong>Radio Damroo</strong> is the finest and most popular digital radio station in Etawah city, Uttar Pradesh, India. Our mission is to keep you connected with pure non-stop high-quality music, local happenings, and clean family-friendly entertainment. All of our talented RJs are live with unique show concepts, interactive games, and superhit playlists.</p>
+                <p>Through our advanced web platform and Android applications, we deliver a premium, crystal-clear audio broadcasting experience in digital media. When Damroo plays, the entertainment never stops! Stay tuned for non-stop blasting hits from your favorite local station.</p>
             </div>
         </section>
 
         <!-- Shows Section -->
         <section id="shows">
-            <h2 class="section-title">Hamare Superhit Shows</h2>
+            <h2 class="section-title">Damroo's Super Hit Shows</h2>
             <div class="grid-layout">
+                <!-- Show 1 -->
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-cloud-sun"></i></div>
                     <h3>Waah Re Etawah</h3>
                     <div class="show-rj">RJ Shouhadra</div>
                     <div class="show-time">06:30 AM - 11:00 AM (Daily)</div>
                 </div>
+                <!-- Show 2 -->
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-award"></i></div>
                     <h3>The Extraordinary</h3>
                     <div class="show-rj">RJ Khushbu</div>
                     <div class="show-time">11:00 AM - 02:00 PM (Mon-Sat)</div>
                 </div>
+                <!-- Show 3 -->
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-users"></i></div>
                     <h3>Dopheri Adda</h3>
                     <div class="show-rj">RJ Kapil</div>
                     <div class="show-time">02:00 PM - 05:00 PM (Mon-Sat)</div>
                 </div>
+                <!-- Show 4 -->
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-bolt"></i></div>
                     <h3>Jabardast Evening</h3>
                     <div class="show-rj">RJ Muskan</div>
                     <div class="show-time">05:00 PM - 08:00 PM (Mon-Sat)</div>
                 </div>
+                <!-- Show 5 -->
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-mug-hot"></i></div>
                     <h3>Night Cafe</h3>
                     <div class="show-rj">RJ Mansi</div>
                     <div class="show-time">08:00 PM - 11:00 PM (Mon-Fri)</div>
+                </div>
+                <!-- Show 6 (Weekend) -->
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-podcast"></i></div>
+                    <h3>Komal Nahta Podcast</h3>
+                    <div class="show-rj">Komal Nahta</div>
+                    <div class="show-time">11:00 AM - 05:00 PM (Sunday)</div>
+                </div>
+                <!-- Show 7 (Weekend) -->
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-pepper-hot"></i></div>
+                    <h3>Weekend Masala</h3>
+                    <div class="show-rj">RJ Mohini</div>
+                    <div class="show-time">05:00 PM - 08:00 PM (Sunday)</div>
+                </div>
+                <!-- Show 8 (Weekend) -->
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-volume-high"></i></div>
+                    <h3>Full Volume Show</h3>
+                    <div class="show-rj">Radio Damroo Special</div>
+                    <div class="show-time">08:00 PM - 11:00 PM (Sat & Sun)</div>
+                </div>
+                <!-- Show 9 (Daily Non-Stop) -->
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-compact-disc"></i></div>
+                    <h3>Non-Stop Music</h3>
+                    <div class="show-rj">DJ Damroo</div>
+                    <div class="show-time">11:00 PM - 12:00 AM (Daily)</div>
                 </div>
             </div>
         </section>
@@ -782,12 +849,12 @@
                     <div class="schedule-status" id="stat-nonstop">OFF AIR</div>
                 </div>
                 
-                <!-- Residual Night stream -->
+                <!-- Station Offline Row (12:00 AM - 06:30 AM) -->
                 <div class="schedule-row" id="sch-offtime">
                     <div class="schedule-time"><i class="fa-regular fa-clock"></i> 00:00 - 06:30</div>
-                    <div class="schedule-show">Damroo Late Night Hits</div>
-                    <div class="schedule-rj">DJ Damroo Remix</div>
-                    <div class="schedule-status" id="stat-offtime">OFF AIR</div>
+                    <div class="schedule-show">Station Offline (Everyday)</div>
+                    <div class="schedule-rj">Radio Damroo</div>
+                    <div class="schedule-status" id="stat-offtime">OFFLINE</div>
                 </div>
             </div>
         </section>
@@ -838,16 +905,27 @@
                 const currentTotalMinutes = (hours * 60) + minutes;
 
                 // Reset all table rows and badges safely
-                document.querySelectorAll('.schedule-row').forEach(row => row.classList.remove('active'));
+                document.querySelectorAll('.schedule-row').forEach(row => {
+                    row.classList.remove('active');
+                    row.classList.remove('offline-row');
+                });
                 document.querySelectorAll('.schedule-status').forEach(status => status.innerText = "OFF AIR");
 
-                // Default Late Night Active Object
+                // Get dynamic elements
+                const titleEl = document.getElementById('current-show-title');
+                const rjEl = document.getElementById('current-rj-name');
+                const descEl = document.getElementById('current-show-description');
+                const badgeEl = document.getElementById('live-indicator-badge');
+                const wavesEl = document.getElementById('visualizer-waves');
+
+                // Default State: Station Offline (12:00 AM to 6:30 AM) -> 0 to 390 mins
                 let activeShow = {
-                    show: "Damroo Late Night Hits",
-                    rj: "DJ Damroo Remix",
-                    desc: "Late night lovers ke liye behtareen non-stop romantic, slow aur remix tracks jo aapki raaton ko dhasu aur surili banayenge.",
+                    show: "Station Offline",
+                    rj: "Radio Damroo",
+                    desc: "Radio Damroo is currently offline. We will meet you at 06:30 AM with our morning energetic show 'Waah Re Etawah'! Till then, take care.",
                     elementId: "sch-offtime",
-                    statusId: "stat-offtime"
+                    statusId: "stat-offtime",
+                    isOffline: true
                 };
 
                 // Everyday morning (6:30 AM to 11:00 AM) -> 390 to 660 mins
@@ -857,7 +935,8 @@
                         rj: "RJ Shouhadra",
                         desc: "Suniye Etawah ka sabse dhasu morning show jo aapki subah ko behad haseen, energetic aur surili bana deta hai! Sirf aur sirf Radio Damroo par.",
                         elementId: "sch-shouhadra",
-                        statusId: "stat-shouhadra"
+                        statusId: "stat-shouhadra",
+                        isOffline: false
                     };
                 }
                 
@@ -869,7 +948,8 @@
                             rj: "Komal Nahta", 
                             desc: "Suniye Bollywood aur entertainment ki ansuni kahaniyan aur behtareen guftagu Komal Nahta ke premium show par Sunday special.", 
                             elementId: "sch-komal", 
-                            statusId: "stat-komal" 
+                            statusId: "stat-komal",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 1020 && currentTotalMinutes < 1200) {
                         activeShow = { 
@@ -877,7 +957,8 @@
                             rj: "RJ Mohini", 
                             desc: "Aapke Sunday ki shaam ko masaledar aur mazedar banane ke liye hazir hain RJ Mohini dhasu gaano ke sath!", 
                             elementId: "sch-mohini", 
-                            statusId: "stat-mohini" 
+                            statusId: "stat-mohini",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 1200 && currentTotalMinutes < 1380) {
                         activeShow = { 
@@ -885,7 +966,8 @@
                             rj: "Radio Damroo Special", 
                             desc: "Sunday ki raat ko banaiye musical aur super-hit! Full Volume show me non-stop blasting tracks sirf aapke liye.", 
                             elementId: "sch-fullvolume", 
-                            statusId: "stat-fullvolume" 
+                            statusId: "stat-fullvolume",
+                            isOffline: false 
                         };
                     }
                 }
@@ -898,7 +980,8 @@
                             rj: "RJ Khushbu", 
                             desc: "Suniye bemisaal aur extraordinary baatein, shandaar music aur interesting kahaniyan RJ Khushbu ke sath Saturday bash me.", 
                             elementId: "sch-khushbu", 
-                            statusId: "stat-khushbu" 
+                            statusId: "stat-khushbu",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 840 && currentTotalMinutes < 1020) {
                         activeShow = { 
@@ -906,7 +989,8 @@
                             rj: "RJ Kapil", 
                             desc: "Kheliye mazedaar games aur suniye dher saari mastiyan, gossips aur superhit songs RJ Kapil ke sath Saturday afternoon me.", 
                             elementId: "sch-kapil", 
-                            statusId: "stat-kapil" 
+                            statusId: "stat-kapil",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 1020 && currentTotalMinutes < 1200) {
                         activeShow = { 
@@ -914,7 +998,8 @@
                             rj: "RJ Muskan", 
                             desc: "Aapki Saturday ki mast evening ko ekdam jabardast aur energetic banane ke liye hazir hain RJ Muskan!", 
                             elementId: "sch-muskan", 
-                            statusId: "stat-muskan" 
+                            statusId: "stat-muskan",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 1200 && currentTotalMinutes < 1380) {
                         activeShow = { 
@@ -922,7 +1007,8 @@
                             rj: "Radio Damroo Special", 
                             desc: "Saturday ki musical night ko banaiye blasting aur energetic! Non-stop hit tracks ke sath full volume enjoy.", 
                             elementId: "sch-fullvolume", 
-                            statusId: "stat-fullvolume" 
+                            statusId: "stat-fullvolume",
+                            isOffline: false 
                         };
                     }
                 }
@@ -935,7 +1021,8 @@
                             rj: "RJ Khushbu", 
                             desc: "Suniye bemisaal aur extraordinary baatein, shandaar music aur interesting kahaniyan RJ Khushbu ke sath.", 
                             elementId: "sch-khushbu", 
-                            statusId: "stat-khushbu" 
+                            statusId: "stat-khushbu",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 840 && currentTotalMinutes < 1020) {
                         activeShow = { 
@@ -943,7 +1030,8 @@
                             rj: "RJ Kapil", 
                             desc: "Kheliye mazedaar games aur suniye dher saari mastiyan, gossips aur superhit songs RJ Kapil ke sath.", 
                             elementId: "sch-kapil", 
-                            statusId: "stat-kapil" 
+                            statusId: "stat-kapil",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 1020 && currentTotalMinutes < 1200) {
                         activeShow = { 
@@ -951,7 +1039,8 @@
                             rj: "RJ Muskan", 
                             desc: "Aapki thaki-haari shaam ko ekdam jabardast aur energetic banane ke liye hazir hain RJ Muskan!", 
                             elementId: "sch-muskan", 
-                            statusId: "stat-muskan" 
+                            statusId: "stat-muskan",
+                            isOffline: false 
                         };
                     } else if (currentTotalMinutes >= 1200 && currentTotalMinutes < 1380) {
                         activeShow = { 
@@ -959,7 +1048,8 @@
                             rj: "RJ Mansi", 
                             desc: "Din bhar ki bhaag-daud aur thakan ke baad, dimag ko behtareen sukoon dene ke liye suniye Night Cafe show RJ Mansi ke sath.", 
                             elementId: "sch-mansi", 
-                            statusId: "stat-mansi" 
+                            statusId: "stat-mansi",
+                            isOffline: false 
                         };
                     }
                 }
@@ -971,25 +1061,52 @@
                         rj: "DJ Damroo",
                         desc: "Pure 1 ghante bina kisi ad ya break ke lagatar non-stop superhit gaane suniye sirf Radio Damroo par everyday.",
                         elementId: "sch-nonstop",
-                        statusId: "stat-nonstop"
+                        statusId: "stat-nonstop",
+                        isOffline: false
                     };
                 }
 
-                // Update Main Live Player Card Text UI elements safely
-                const titleEl = document.getElementById('current-show-title');
-                const rjEl = document.getElementById('current-rj-name');
-                const descEl = document.getElementById('current-show-description');
-
+                // Update Player Title, RJ Name and Description
                 if (titleEl) titleEl.innerText = activeShow.show;
                 if (rjEl) rjEl.innerHTML = `<i class="fa-solid fa-microphone-lines"></i> <span>${activeShow.rj}</span>`;
                 if (descEl) descEl.innerText = activeShow.desc;
 
+                // Handle Offline visual changes on the main player card
+                if (activeShow.isOffline) {
+                    if (badgeEl) {
+                        badgeEl.innerHTML = `<i class="fa-solid fa-circle-notch"></i> Offline`;
+                        badgeEl.classList.add('offline-badge');
+                    }
+                    if (wavesEl) {
+                        wavesEl.classList.add('offline-waves');
+                    }
+                } else {
+                    if (badgeEl) {
+                        badgeEl.innerHTML = `<i class="fa-solid fa-circle"></i> Live Now`;
+                        badgeEl.classList.remove('offline-badge');
+                    }
+                    if (wavesEl) {
+                        wavesEl.classList.remove('offline-waves');
+                    }
+                }
+
                 // Update Schedule Table Row Highlighting safely
                 const activeRow = document.getElementById(activeShow.elementId);
-                if (activeRow) activeRow.classList.add('active');
+                if (activeRow) {
+                    activeRow.classList.add('active');
+                    if (activeShow.isOffline) {
+                        activeRow.classList.add('offline-row');
+                    }
+                }
 
                 const activeStatus = document.getElementById(activeShow.statusId);
-                if (activeStatus) activeStatus.innerText = "LIVE NOW";
+                if (activeStatus) {
+                    if (activeShow.isOffline) {
+                        activeStatus.innerText = "OFFLINE";
+                    } else {
+                        activeStatus.innerText = "LIVE NOW";
+                    }
+                }
 
             } catch (e) {
                 console.error("Scheduler Error: ", e);
@@ -1044,7 +1161,7 @@
             `).join('');
         }
 
-        // --- ENGINE INIT & CASTER EMBED FALLBACK DETECTOR ---
+        // --- 4. ENGINE INIT & CASTER EMBED FALLBACK DETECTOR ---
         window.addEventListener('DOMContentLoaded', () => {
             updateShowScheduler();
             renderChatsList();
