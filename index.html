@@ -1,144 +1,174 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>89.6 Radio Damroo - Halla Har Dil Mein</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Outfit', 'sans-serif'], display: ['Rajdhani', 'sans-serif'] },
-                    colors: { brand: { red: '#FF0E00', yellow: '#F1BE3B', dark: '#08080C', card: '#111116' } }
-                }
+// --- 1. CONFIGURATION (अपनी स्ट्रीम और API की डिटेल्स यहाँ डालें) ---
+const STREAM_URL = "https://stream.zeno.fm/f9t7t888w0euv"; 
+const API_METADATA_URL = "https://api.zeno.fm/mounts/metadata/subscribe/f9t7t888w0euv"; // उदाहरण के लिए Zeno API
+
+// DOM Elements
+const player = document.getElementById('radio-player');
+const playBtn = document.getElementById('play-btn');
+const wavesContainer = document.getElementById('waves');
+const currentShow = document.getElementById('current-show');
+const currentRj = document.getElementById('current-rj');
+
+let audioContext, analyser, source, animationFrameId;
+
+// --- 2. REAL AUDIO VISUALIZER (असली म्यूज़िक बीट्स पर चलने वाली वेव्स) ---
+function setupVisualizer() {
+    if (audioContext) return; // दोबारा सेटअप न हो
+
+    // Web Audio API सेटअप
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioContext.createAnalyser();
+    
+    // प्लेयर को ऑडियो सोर्स से जोड़ें
+    source = audioContext.createMediaElementSource(player);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    analyser.fftSize = 32; // वेव्स की संख्या कंट्रोल करने के लिए
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    // वेव्स को HTML में जनरेट करना
+    wavesContainer.innerHTML = '';
+    for (let i = 0; i < bufferLength; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        wavesContainer.appendChild(bar);
+    }
+    const bars = document.querySelectorAll('.bar');
+
+    // वेव्स को म्यूज़िक के साथ एनिमेट करने का फंक्शन
+    function animateWaves() {
+        if (player.paused) return;
+        
+        animationFrameId = requestAnimationFrame(animateWaves);
+        analyser.getByteFrequencyData(dataArray);
+
+        bars.forEach((bar, index) => {
+            // ऑडियो फ्रीक्वेंसी के आधार पर हाइट सेट करना
+            const height = (dataArray[index] / 255) * 60; 
+            bar.style.height = `${Math.max(5, height)}px`;
+        });
+    }
+    animateWaves();
+}
+
+// --- 3. PLAY / PAUSE CONTROL ---
+function togglePlay() {
+    // ब्राउज़र की सुरक्षा नीति के कारण AudioContext यूज़र क्लिक पर ही शुरू होना चाहिए
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+
+    if (player.paused) {
+        player.src = STREAM_URL; // बफरिंग कम करने के लिए क्लिक पर सोर्स लोड करें
+        player.play()
+            .then(() => {
+                playBtn.innerText = "PAUSE LIVE";
+                wavesContainer.style.visibility = 'visible';
+                setupVisualizer();
+                fetchLiveMetadata(); // लाइव डेटा लाना शुरू करें
+            })
+            .catch(err => {
+                console.error("Playback error:", err);
+                alert("रेडियो स्ट्रीम लोड नहीं हो सकी। कृपया दोबारा कोशिश करें।");
+            });
+    } else {
+        player.pause();
+        player.src = ""; // बैकग्राउंड में डेटा वेस्ट होने से रोकने के लिए
+        playBtn.innerText = "PLAY LIVE";
+        wavesContainer.style.visibility = 'hidden';
+        cancelAnimationFrame(animationFrameId);
+    }
+}
+
+// --- 4. LIVE METADATA FETCHING (सर्वर से लाइव गाने/RJ का नाम लाना) ---
+function fetchLiveMetadata() {
+    // प्रीमियम वेबसाइट्स Server-Sent Events (SSE) या Fetch API का यूज़ करती हैं
+    if (!!window.EventSource && API_METADATA_URL) {
+        const source = new EventSource(API_METADATA_URL);
+        
+        source.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.streamTitle) {
+                // मान लेते हैं सर्ver से "Show Name - RJ Name" आ रहा है
+                const meta = data.streamTitle.split(" - ");
+                currentShow.innerText = `शो: ${meta[0] || 'डमरू बीट्स'}`;
+                currentRj.innerText = `आरजे: ${meta[1] || 'लाइव'}`;
             }
-        }
-    </script>
-    <style>
-        body { background: radial-gradient(circle at top, #1a0808 0%, #060609 100%); font-family: 'Outfit', sans-serif; }
-        .glow-effect { box-shadow: 0 0 20px rgba(255, 14, 0, 0.15); }
-        .vinyl-animation { animation: spin 12s linear infinite; animation-play-state: paused; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body class="text-neutral-100 min-h-screen flex flex-col justify-between">
+        };
 
-    <header class="border-b border-neutral-900 bg-black/40 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <img src="logo.png" alt="Radio Damroo Logo" class="h-12 w-auto object-contain">
-            <div class="flex items-center space-x-2 bg-neutral-900/80 px-3 py-1.5 rounded-full border border-neutral-800">
-                <span class="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
-                <span class="text-[11px] font-bold tracking-wider text-neutral-300 uppercase">Live On Air</span>
-            </div>
+        source.onerror = function() {
+            source.close();
+            // अगर API फेल हो जाए तो टाइम-बेस्ड बैकअप लॉजिक चलाएं
+            runBackupSchedule();
+        };
+    } else {
+        runBackupSchedule();
+    }
+}
+
+// बैकअप लॉजिक (अगर सर्वर API काम न करे)
+function runBackupSchedule() {
+    const hour = new Date().getHours();
+    if (hour >= 7 && hour < 12) {
+        currentShow.innerText = "शो: मॉर्निग मंत्रा";
+        currentRj.innerText = "आरजे: अमित";
+    } else if (hour >= 12 && hour < 18) {
+        currentShow.innerText = "शो: डमरू बीट्स";
+        currentRj.innerText = "आरजे: राहुल";
+    } else {
+        currentShow.innerText = "शो: महफ़िल-ए-ग़ज़ल";
+        currentRj.innerText = "आरजे: नेहा";
+    }
+}
+
+// --- 5. PREMIUM COMMENT SYSTEM (LOCAL STORAGE & SANITIZATION) ---
+// इससे पेज रीफ्रेश होने पर भी पुराने कमेंट्स गायब नहीं होंगे
+document.addEventListener("DOMContentLoaded", () => {
+    loadComments();
+    runBackupSchedule(); // पेज लोड होते ही शुरुआती शो डिटेल्स दिखाने के लिए
+});
+
+function addComment(e) {
+    e.preventDefault();
+    const usernameInput = document.getElementById('username');
+    const commentTextInput = document.getElementById('comment-text');
+    
+    // सुरक्षा के लिए XSS (Hacking) प्रोटेक्शन (HTML टैग्स हटाना)
+    const username = usernameInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const commentText = commentTextInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    if(!username || !commentText) return;
+
+    const commentData = { username, text: commentText, time: new Date().toLocaleTimeString() };
+
+    // लोकल स्टोरेज में सेव करना
+    let comments = localStorage.getItem('radio_comments') ? JSON.parse(localStorage.getItem('radio_comments')) : [];
+    comments.unshift(commentData); // नए कमेंट को सबसे ऊपर रखें
+    localStorage.setItem('radio_comments', JSON.stringify(comments.slice(0, 50))); // सिर्फ आखिरी 50 कमेंट्स रखें
+
+    renderComments();
+
+    // फॉर्म खाली करना
+    commentTextInput.value = '';
+}
+
+function loadComments() {
+    renderComments();
+}
+
+function renderComments() {
+    const list = document.getElementById('comments-list');
+    if(!list) return;
+    
+    let comments = localStorage.getItem('radio_comments') ? JSON.parse(localStorage.getItem('radio_comments')) : [];
+    
+    list.innerHTML = comments.map(c => `
+        <div class="comment-item" style="animation: fadeIn 0.5s ease;">
+            <span style="color: #ff5722; font-weight: bold;">${c.username}</span> 
+            <span style="font-size: 11px; color: #777; float: right;">${c.time}</span>
+            <p style="margin-top: 5px; color: #ddd;">${c.text}</p>
         </div>
-    </header>
-
-    <main class="flex-grow flex items-center justify-center p-4">
-        <div class="bg-brand-card/80 border border-neutral-900 rounded-3xl p-6 max-w-sm w-full glow-effect text-center space-y-6 backdrop-blur-sm">
-            
-            <div class="inline-flex items-center space-x-2 bg-neutral-950 px-4 py-2 rounded-full border border-neutral-900 mx-auto">
-                <i class="fa-solid fa-headphones text-brand-red text-xs animate-bounce"></i>
-                <span class="text-xs font-semibold text-neutral-400">
-                    <span id="listener-count" class="text-white font-bold font-display text-sm">3,485</span> Log Sun Rahe Hain
-                </span>
-            </div>
-
-            <div class="relative w-48 h-48 mx-auto flex items-center justify-center">
-                <div class="absolute inset-0 bg-gradient-to-tr from-brand-red to-brand-yellow rounded-full opacity-10 animate-pulse"></div>
-                <div id="vinyl" class="vinyl-animation w-44 h-44 bg-neutral-950 border-4 border-neutral-800 rounded-full flex items-center justify-center shadow-2xl relative">
-                    <div class="absolute inset-4 border border-neutral-900/40 rounded-full"></div>
-                    <div class="absolute inset-8 border border-neutral-900/40 rounded-full"></div>
-                    <div class="w-20 h-20 rounded-full bg-neutral-900 overflow-hidden border-2 border-brand-yellow/30 flex items-center justify-center z-10">
-                        <img src="logo.png" alt="Center Art" class="w-14 h-auto object-contain">
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h1 class="text-2xl font-bold font-display tracking-wide text-white uppercase">89.6 Radio Damroo</h1>
-                <p class="text-xs text-neutral-400 font-medium tracking-wide mt-1">Halla Har Dil Mein • Etawah CR</p>
-            </div>
-
-            <audio id="radio-audio" preload="none"></audio>
-
-            <div class="flex items-center justify-center py-2">
-                <button id="play-btn" onclick="togglePlay()" class="w-20 h-20 bg-white text-black hover:bg-brand-red hover:text-white rounded-full flex items-center justify-center shadow-xl transform active:scale-95 transition-all duration-300 group">
-                    <i id="play-icon" class="fa-solid fa-play text-2xl ml-1"></i>
-                </button>
-            </div>
-
-            <div class="bg-neutral-950/60 rounded-xl p-3 border border-neutral-900/50">
-                <p id="status" class="text-xs font-medium text-neutral-400">Play button daba kar live stream start karein.</p>
-            </div>
-        </div>
-    </main>
-
-    <footer class="py-6 text-center text-[11px] text-neutral-600 tracking-wide border-t border-neutral-950">
-        &copy; 2026 89.6 Radio Damroo. All Rights Reserved.
-    </footer>
-
-    <script>
-        const audio = document.getElementById('radio-audio');
-        const playBtn = document.getElementById('play-btn');
-        const playIcon = document.getElementById('play-icon');
-        const status = document.getElementById('status');
-        const vinyl = document.getElementById('vinyl');
-        let isPlaying = false;
-
-        // Secure Stream Endpoints List
-        const fallbackStreams = [
-            "https://shaincast.caster.fm:2199/tunein/damroo.mp3",
-            "https://shaincast.caster.fm:2199/tunein/damroo.pls",
-            "https://api.allorigins.win/raw?url=http://damroo.ismyradio.com:8000/stream"
-        ];
-        let streamIdx = 0;
-
-        function togglePlay() {
-            if (isPlaying) {
-                audio.pause();
-                audio.src = "";
-                isPlaying = false;
-                playIcon.className = "fa-solid fa-play text-2xl ml-1";
-                playBtn.className = "w-20 h-20 bg-white text-black rounded-full flex items-center justify-center shadow-xl";
-                vinyl.style.animationPlayState = "paused";
-                status.innerText = "Stream paused.";
-            } else {
-                status.innerText = "Connecting to secure stream...";
-                audio.src = fallbackStreams[streamIdx];
-                
-                audio.play().then(() => {
-                    isPlaying = true;
-                    playIcon.className = "fa-solid fa-pause text-2xl";
-                    playBtn.className = "w-20 h-20 bg-brand-red text-white rounded-full flex items-center justify-center shadow-xl";
-                    vinyl.style.animationPlayState = "running";
-                    status.innerText = "🎵 Live Stream Active!";
-                }).catch(err => {
-                    console.log("Retrying next secure route...");
-                    streamIdx = (streamIdx + 1) % fallbackStreams.length;
-                    audio.src = fallbackStreams[streamIdx];
-                    audio.play().then(() => {
-                        isPlaying = true;
-                        playIcon.className = "fa-solid fa-pause text-2xl";
-                        vinyl.style.animationPlayState = "running";
-                        status.innerText = "🎵 Live Stream Connected via Backup Secure Route!";
-                    }).catch(() => {
-                        status.innerText = "Browser blocking stream. Click top-left Lock icon and set Insecure Content to 'Allow'.";
-                    });
-                });
-            }
-        }
-
-        // Live stats fallback loop
-        let baseCount = 3485;
-        setInterval(() => {
-            baseCount += Math.floor(Math.random() * 5) - 2;
-            document.getElementById('listener-count').innerText = baseCount.toLocaleString('en-US');
-        }, 6000);
-    </script>
-</body>
-</html>
+    `).join('');
+}
