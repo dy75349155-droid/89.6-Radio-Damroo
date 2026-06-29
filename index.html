@@ -1,174 +1,103 @@
-// --- 1. CONFIGURATION (अपनी स्ट्रीम और API की डिटेल्स यहाँ डालें) ---
-const STREAM_URL = "https://stream.zeno.fm/f9t7t888w0euv"; 
-const API_METADATA_URL = "https://api.zeno.fm/mounts/metadata/subscribe/f9t7t888w0euv"; // उदाहरण के लिए Zeno API
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Damroo - Live Premium Player</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// DOM Elements
-const player = document.getElementById('radio-player');
-const playBtn = document.getElementById('play-btn');
-const wavesContainer = document.getElementById('waves');
-const currentShow = document.getElementById('current-show');
-const currentRj = document.getElementById('current-rj');
+    <header>
+        <nav>
+            <div class="logo">📻 Radio Damroo</div>
+            <ul>
+                <li><a href="#home">सुनें लाइव</a></li>
+                <li><a href="#about">हमारे बारे में</a></li>
+                <li><a href="#schedule">शेड्यूल</a></li>
+                <li><a href="#team">हमारी टीम</a></li>
+                <li><a href="#comments">कमेंट्स</a></li>
+            </ul>
+        </nav>
+    </header>
 
-let audioContext, analyser, source, animationFrameId;
-
-// --- 2. REAL AUDIO VISUALIZER (असली म्यूज़िक बीट्स पर चलने वाली वेव्स) ---
-function setupVisualizer() {
-    if (audioContext) return; // दोबारा सेटअप न हो
-
-    // Web Audio API सेटअप
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioContext.createAnalyser();
-    
-    // प्लेयर को ऑडियो सोर्स से जोड़ें
-    source = audioContext.createMediaElementSource(player);
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
-
-    analyser.fftSize = 32; // वेव्स की संख्या कंट्रोल करने के लिए
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    // वेव्स को HTML में जनरेट करना
-    wavesContainer.innerHTML = '';
-    for (let i = 0; i < bufferLength; i++) {
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        wavesContainer.appendChild(bar);
-    }
-    const bars = document.querySelectorAll('.bar');
-
-    // वेव्स को म्यूज़िक के साथ एनिमेट करने का फंक्शन
-    function animateWaves() {
-        if (player.paused) return;
+    <div class="container">
         
-        animationFrameId = requestAnimationFrame(animateWaves);
-        analyser.getByteFrequencyData(dataArray);
+        <section id="home" class="player-section">
+            <div class="show-info">
+                <div id="current-show">शो का नाम: डमरू बीट्स</div>
+                <div id="current-rj">आरजे: आरजे राहुल</div>
+            </div>
 
-        bars.forEach((bar, index) => {
-            // ऑडियो फ्रीक्वेंसी के आधार पर हाइट सेट करना
-            const height = (dataArray[index] / 255) * 60; 
-            bar.style.height = `${Math.max(5, height)}px`;
-        });
-    }
-    animateWaves();
-}
+            <div class="wave-container" id="waves">
+                </div>
 
-// --- 3. PLAY / PAUSE CONTROL ---
-function togglePlay() {
-    // ब्राउज़र की सुरक्षा नीति के कारण AudioContext यूज़र क्लिक पर ही शुरू होना चाहिए
-    if (audioContext && audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
+            <div class="controls">
+                <audio id="radio-player" crossorigin="anonymous"></audio>
+                <button id="play-btn" onclick="togglePlay()">PLAY LIVE</button>
+            </div>
+        </section>
 
-    if (player.paused) {
-        player.src = STREAM_URL; // बफरिंग कम करने के लिए क्लिक पर सोर्स लोड करें
-        player.play()
-            .then(() => {
-                playBtn.innerText = "PAUSE LIVE";
-                wavesContainer.style.visibility = 'visible';
-                setupVisualizer();
-                fetchLiveMetadata(); // लाइव डेटा लाना शुरू करें
-            })
-            .catch(err => {
-                console.error("Playback error:", err);
-                alert("रेडियो स्ट्रीम लोड नहीं हो सकी। कृपया दोबारा कोशिश करें।");
-            });
-    } else {
-        player.pause();
-        player.src = ""; // बैकग्राउंड में डेटा वेस्ट होने से रोकने के लिए
-        playBtn.innerText = "PLAY LIVE";
-        wavesContainer.style.visibility = 'hidden';
-        cancelAnimationFrame(animationFrameId);
-    }
-}
+        <section id="about">
+            <h2>रेडियो डमरू के बारे में</h2>
+            <p class="about-text">रेडियो डमरू आपका अपना स्थानीय डिजिटल रेडियो स्टेशन है जो बेहतरीन संगीत, ताज़ा ख़बरें और आपके मनोरंजन के लिए चौबीसों घंटे लाइव रहता है। हमारा उद्देश्य लोक कला, संस्कृति और युवा प्रतिभाओं को एक मंच देना है।</p>
+        </section>
 
-// --- 4. LIVE METADATA FETCHING (सर्वर से लाइव गाने/RJ का नाम लाना) ---
-function fetchLiveMetadata() {
-    // प्रीमियम वेबसाइट्स Server-Sent Events (SSE) या Fetch API का यूज़ करती हैं
-    if (!!window.EventSource && API_METADATA_URL) {
-        const source = new EventSource(API_METADATA_URL);
-        
-        source.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data.streamTitle) {
-                // मान लेते हैं सर्ver से "Show Name - RJ Name" आ रहा है
-                const meta = data.streamTitle.split(" - ");
-                currentShow.innerText = `शो: ${meta[0] || 'डमरू बीट्स'}`;
-                currentRj.innerText = `आरजे: ${meta[1] || 'लाइव'}`;
-            }
-        };
+        <section id="schedule">
+            <h2>शो शेड्यूलिंग (Schedule)</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>🌅 मॉर्निग मंत्रा</h3>
+                    <p>समय: सुबह 07:00 - 12:00</p>
+                    <p>आरजे: आरजे अमित</p>
+                </div>
+                <div class="card">
+                    <h3>🔥 डमरू बीट्स</h3>
+                    <p>समय: दोपहर 12:00 - 06:00</p>
+                    <p>आरजे: आरजे राहुल</p>
+                </div>
+                <div class="card">
+                    <h3>🌙 महफ़िल-ए-ग़ज़ल</h3>
+                    <p>समय: शाम 06:00 - रात 12:00</p>
+                    <p>आरजे: आरजे नेहा</p>
+                </div>
+            </div>
+        </section>
 
-        source.onerror = function() {
-            source.close();
-            // अगर API फेल हो जाए तो टाइम-बेस्ड बैकअप लॉजिक चलाएं
-            runBackupSchedule();
-        };
-    } else {
-        runBackupSchedule();
-    }
-}
+        <section id="team">
+            <h2>हमारी टीम (Meet the RJ Team)</h2>
+            <div class="grid">
+                <div class="card center-text">
+                    <h3>आरजे राहुल</h3>
+                    <p class="highlight">रॉकस्टार ऑफ डमरू</p>
+                </div>
+                <div class="card center-text">
+                    <h3>आरजे नेहा</h3>
+                    <p class="highlight">मेलोडी क्वीन</p>
+                </div>
+                <div class="card center-text">
+                    <h3>आरजे अमित</h3>
+                    <p class="highlight">मॉर्निंग गुरु</p>
+                </div>
+            </div>
+        </section>
 
-// बैकअप लॉजिक (अगर सर्वर API काम न करे)
-function runBackupSchedule() {
-    const hour = new Date().getHours();
-    if (hour >= 7 && hour < 12) {
-        currentShow.innerText = "शो: मॉर्निग मंत्रा";
-        currentRj.innerText = "आरजे: अमित";
-    } else if (hour >= 12 && hour < 18) {
-        currentShow.innerText = "शो: डमरू बीट्स";
-        currentRj.innerText = "आरजे: राहुल";
-    } else {
-        currentShow.innerText = "शो: महफ़िल-ए-ग़ज़ल";
-        currentRj.innerText = "आरजे: नेहा";
-    }
-}
+        <section id="comments">
+            <h2>श्रोताओं के कमेंट्स (Live Chat)</h2>
+            <div class="comment-box">
+                <form class="comment-form" onsubmit="addComment(event)">
+                    <input type="text" id="username" placeholder="आपका नाम" required>
+                    <textarea id="comment-text" placeholder="अपना संदेश यहाँ लिखें..." rows="3" required></textarea>
+                    <button type="submit">कमेंट पोस्ट करें</button>
+                </form>
+                <div class="comments-list" id="comments-list">
+                    </div>
+            </div>
+        </section>
 
-// --- 5. PREMIUM COMMENT SYSTEM (LOCAL STORAGE & SANITIZATION) ---
-// इससे पेज रीफ्रेश होने पर भी पुराने कमेंट्स गायब नहीं होंगे
-document.addEventListener("DOMContentLoaded", () => {
-    loadComments();
-    runBackupSchedule(); // पेज लोड होते ही शुरुआती शो डिटेल्स दिखाने के लिए
-});
+    </div>
 
-function addComment(e) {
-    e.preventDefault();
-    const usernameInput = document.getElementById('username');
-    const commentTextInput = document.getElementById('comment-text');
-    
-    // सुरक्षा के लिए XSS (Hacking) प्रोटेक्शन (HTML टैग्स हटाना)
-    const username = usernameInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    const commentText = commentTextInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    <script src="app.js"></script>
+</body>
+</html>
 
-    if(!username || !commentText) return;
-
-    const commentData = { username, text: commentText, time: new Date().toLocaleTimeString() };
-
-    // लोकल स्टोरेज में सेव करना
-    let comments = localStorage.getItem('radio_comments') ? JSON.parse(localStorage.getItem('radio_comments')) : [];
-    comments.unshift(commentData); // नए कमेंट को सबसे ऊपर रखें
-    localStorage.setItem('radio_comments', JSON.stringify(comments.slice(0, 50))); // सिर्फ आखिरी 50 कमेंट्स रखें
-
-    renderComments();
-
-    // फॉर्म खाली करना
-    commentTextInput.value = '';
-}
-
-function loadComments() {
-    renderComments();
-}
-
-function renderComments() {
-    const list = document.getElementById('comments-list');
-    if(!list) return;
-    
-    let comments = localStorage.getItem('radio_comments') ? JSON.parse(localStorage.getItem('radio_comments')) : [];
-    
-    list.innerHTML = comments.map(c => `
-        <div class="comment-item" style="animation: fadeIn 0.5s ease;">
-            <span style="color: #ff5722; font-weight: bold;">${c.username}</span> 
-            <span style="font-size: 11px; color: #777; float: right;">${c.time}</span>
-            <p style="margin-top: 5px; color: #ddd;">${c.text}</p>
-        </div>
-    `).join('');
-}
