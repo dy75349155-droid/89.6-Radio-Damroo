@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Damroo - Etawah Ka Apna Premium Radio</title>
-    <!-- FontAwesome Icons for clean premium look -->
+    <title>Radio Damroo - Live Premium Player</title>
+    <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- DESIGN SYSTEM (Red, Yellow & Deep Dark Black Theme) --- */
@@ -33,7 +33,7 @@
             overflow-x: hidden;
         }
 
-        /* --- Custom Premium Scrollbar --- */
+        /* --- Scrollbar Style --- */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -71,25 +71,23 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 22px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--primary-yellow);
             text-decoration: none;
+            cursor: pointer;
         }
 
-        .logo span {
-            color: var(--primary-red);
+        .logo-img {
+            max-height: 50px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.3s ease;
         }
 
-        .logo i {
-            font-size: 26px;
-            animation: pulse-icon 2s infinite;
+        .logo-img:hover {
+            transform: scale(1.05);
         }
 
-        /* Responsive Navigation Menu with no overlap */
+        /* Responsive Navigation Menu */
         nav ul {
             display: flex;
             list-style: none;
@@ -112,7 +110,6 @@
             border-bottom: 2px solid var(--primary-yellow);
         }
 
-        /* Responsive menu for Mobile screens */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -214,7 +211,7 @@
             margin-bottom: 20px;
         }
 
-        /* Custom Audio Waves (Playing state visual) */
+        /* Animated waves representing audio beats */
         .waves-box {
             display: flex;
             align-items: flex-end;
@@ -283,15 +280,16 @@
             padding: 15px 10px;
             border: 1px dashed rgba(255, 204, 0, 0.3);
             min-height: 120px;
+            position: relative;
         }
 
-        /* Ensuring any loaded Caster FM iframe fits beautifully on all screens */
         .caster-embed-area iframe, 
         .caster-embed-area .cstrEmbed {
             width: 100% !important;
             max-width: 100% !important;
             display: block !important;
             text-align: center;
+            border: none;
         }
 
         .caster-embed-area a {
@@ -398,34 +396,6 @@
             display: inline-block;
         }
 
-        /* --- RJs Card --- */
-        .rj-card {
-            background: var(--card-black);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border-top: 3px solid var(--primary-red);
-            transition: all 0.3s ease;
-        }
-
-        .rj-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px var(--glow-red);
-        }
-
-        .rj-avatar-box {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary-red), var(--primary-yellow));
-            color: var(--bg-black);
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-        }
-
         /* --- Schedule Section --- */
         .schedule-box {
             background: var(--card-black);
@@ -444,7 +414,7 @@
             transition: all 0.3s ease;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .schedule-row {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -623,8 +593,9 @@
     <header>
         <div class="nav-container">
             <a href="#" class="logo">
-                <img src="logo.png" alt="Radio Damroo" class="logo-img">
-</a>
+                <!-- Direct logo file linked. On error, a solid yellow fallback SVG dummy logo loads. -->
+                <img src="logo.png" alt="Radio Damroo" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x50/121212/ffcc00?text=Radio+Damroo';">
+            </a>
             <nav>
                 <ul>
                     <li><a href="#home" class="active">Live Player</a></li>
@@ -648,11 +619,10 @@
                     <i class="fa-solid fa-circle"></i> Live Now
                 </div>
                 
-                <!-- Dynamic show details updated instantly via JavaScript -->
                 <h1 id="current-show-title">Loading Active Show...</h1>
                 
                 <div id="current-rj-name">
-                    <i class="fa-solid fa-user-tie"></i> <span>Loading RJ...</span>
+                    <i class="fa-solid fa-microphone-lines"></i> <span>Loading RJ...</span>
                 </div>
 
                 <p id="current-show-description">
@@ -674,12 +644,12 @@
                 </div>
             </div>
 
-            <!-- Caster.fm Official Player Card Container -->
+            <!-- Caster.fm Official Player Card Container with Embedded Code -->
             <div class="caster-player-card">
                 <h3><i class="fa-solid fa-circle-play"></i> Caster.fm Player</h3>
                 
-                <div class="caster-embed-area">
-                     <!-- =================================================================================== -->
+                <div class="caster-embed-area" id="caster-container">
+                    <!-- =================================================================================== -->
                     <!-- !!! INTEGRATED OFFICIAL CASTER.FM EMBED WIDGET !!! -->
                     <!-- =================================================================================== -->
                     <div data-type="newStreamPlayer" data-publicToken="a8bf4b8e-212c-44ad-bc0c-bfa56c04a2a1" data-theme="dark" data-color="e81e4d" data-channelId="a221638d-ec79-4ca5-94cf-ec8a17ae18ae" data-rendered="false" class="cstrEmbed">
@@ -715,43 +685,43 @@
                     <div class="show-icon"><i class="fa-solid fa-cloud-sun"></i></div>
                     <h3>Waah Re Etawah</h3>
                     <div class="show-rj">RJ Shouhadra</div>
-                    <div class="show-time">06:30 AM - 11:00 AM</div>
+                    <div class="show-time">06:30 AM - 11:00 AM (Daily)</div>
                 </div>
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-award"></i></div>
                     <h3>The Extraordinary</h3>
                     <div class="show-rj">RJ Khushbu</div>
-                    <div class="show-time">11:00 AM - 02:00 PM</div>
+                    <div class="show-time">11:00 AM - 02:00 PM (Mon-Sat)</div>
                 </div>
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-users"></i></div>
                     <h3>Dopheri Adda</h3>
                     <div class="show-rj">RJ Kapil</div>
-                    <div class="show-time">02:00 PM - 05:00 PM</div>
+                    <div class="show-time">02:00 PM - 05:00 PM (Mon-Sat)</div>
                 </div>
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-bolt"></i></div>
                     <h3>Jabardast Evening</h3>
                     <div class="show-rj">RJ Muskan</div>
-                    <div class="show-time">05:00 PM - 08:00 PM</div>
+                    <div class="show-time">05:00 PM - 08:00 PM (Mon-Sat)</div>
                 </div>
                 <div class="show-card">
                     <div class="show-icon"><i class="fa-solid fa-mug-hot"></i></div>
                     <h3>Night Cafe</h3>
                     <div class="show-rj">RJ Mansi</div>
-                    <div class="show-time">08:00 PM - 11:00 PM</div>
+                    <div class="show-time">08:00 PM - 11:00 PM (Mon-Fri)</div>
                 </div>
             </div>
         </section>
 
-        <!-- Dynamic Scheduling Section -->
+        <!-- Dynamic Scheduling Section (Fully Custom visual list according to your schedule) -->
         <section id="schedule">
             <h2 class="section-title">Show Scheduling</h2>
             <div class="schedule-box">
-                <!-- Row 1 -->
+                <!-- Everyday Morning -->
                 <div class="schedule-row" id="sch-shouhadra">
                     <div class="schedule-time"><i class="fa-regular fa-clock"></i> 06:30 - 11:00</div>
-                    <div class="schedule-show">Waah Re Etawah</div>
+                    <div class="schedule-show">Waah Re Etawah (Everyday)</div>
                     <div class="schedule-rj">RJ Shouhadra</div>
                     <div class="schedule-status" id="stat-shouhadra">OFF AIR</div>
                 </div>
@@ -779,14 +749,43 @@
                 <!-- Row 5 -->
                 <div class="schedule-row" id="sch-mansi">
                     <div class="schedule-time"><i class="fa-regular fa-clock"></i> 20:00 - 23:00</div>
-                    <div class="schedule-show">Night Cafe</div>
+                    <div class="schedule-show">Night Cafe (Mon-Fri)</div>
                     <div class="schedule-rj">RJ Mansi</div>
                     <div class="schedule-status" id="stat-mansi">OFF AIR</div>
                 </div>
-                <!-- Row 6 -->
+
+                <!-- Weekend Specials -->
+                <div class="schedule-row" id="sch-komal">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 11:00 - 17:00</div>
+                    <div class="schedule-show">Komal Nahta Podcast (Sunday)</div>
+                    <div class="schedule-rj">Komal Nahta</div>
+                    <div class="schedule-status" id="stat-komal">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-mohini">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 17:00 - 20:00</div>
+                    <div class="schedule-show">Weekend Masala (Sunday)</div>
+                    <div class="schedule-rj">RJ Mohini</div>
+                    <div class="schedule-status" id="stat-mohini">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-fullvolume">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 20:00 - 23:00</div>
+                    <div class="schedule-show">Full Volume (Sat & Sun)</div>
+                    <div class="schedule-rj">Radio Damroo Special</div>
+                    <div class="schedule-status" id="stat-fullvolume">OFF AIR</div>
+                </div>
+
+                <!-- Everyday Late Night Non-Stop Music (11:00 PM - 12:00 AM) -->
+                <div class="schedule-row" id="sch-nonstop">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 23:00 - 00:00</div>
+                    <div class="schedule-show">Non-Stop Music (Everyday)</div>
+                    <div class="schedule-rj">DJ Damroo</div>
+                    <div class="schedule-status" id="stat-nonstop">OFF AIR</div>
+                </div>
+                
+                <!-- Residual Night stream -->
                 <div class="schedule-row" id="sch-offtime">
-                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 23:00 - 06:30</div>
-                    <div class="schedule-show">Damroo Non-Stop Hits</div>
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 00:00 - 06:30</div>
+                    <div class="schedule-show">Damroo Late Night Hits</div>
                     <div class="schedule-rj">DJ Damroo Remix</div>
                     <div class="schedule-status" id="stat-offtime">OFF AIR</div>
                 </div>
@@ -806,7 +805,9 @@
                         <label for="message-input">Apna Pyara Message / Song Request</label>
                         <textarea id="message-input" rows="4" placeholder="Apna message likhein..." required></textarea>
                     </div>
-                    <button type="submit" class="submit-btn"><i class="fa-regular fa-paper-plane"></i> Message Post Karein</button>
+                    <div style="text-align: center;">
+                        <button type="submit" class="submit-btn"><i class="fa-regular fa-paper-plane"></i> Message Post Karein</button>
+                    </div>
                 </form>
 
                 <div class="comments-list-wrapper">
@@ -827,110 +828,175 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. SHOW DATA & CONFIGURATION ---
-        const showsData = [
-            {
-                rj: "RJ Shouhadra",
-                show: "Waah Re Etawah",
-                startMin: 390,  // 06:30 AM
-                endMin: 660,    // 11:00 AM
-                desc: "Suniye Etawah ka sabse dhasu morning show jo aapki subah ko behad haseen, energetic aur surili bana deta hai! Sirf aur sirf Radio Damroo par.",
-                elementId: "sch-shouhadra",
-                statusId: "stat-shouhadra"
-            },
-            {
-                rj: "RJ Khushbu",
-                show: "The Extraordinary",
-                startMin: 660,  // 11:00 AM
-                endMin: 840,    // 02:00 PM
-                desc: "Suniye bemisaal aur extraordinary baatein, shandaar music aur interesting kahaniyan jo aapke dophar ko ek naye excitement se bhar degi!",
-                elementId: "sch-khushbu",
-                statusId: "stat-khushbu"
-            },
-            {
-                rj: "RJ Kapil",
-                show: "Dopheri Adda",
-                startMin: 840,  // 02:00 PM
-                endMin: 1020,   // 05:00 PM
-                desc: "Dophar ki dhoop me thandi hawa jaisa asar! Kheliye mazedaar games aur suniye dher saari mastiyan, gossips aur superhit songs RJ Kapil ke sath.",
-                elementId: "sch-kapil",
-                statusId: "stat-kapil"
-            },
-            {
-                rj: "RJ Muskan",
-                show: "Jabardast Evening",
-                startMin: 1020, // 05:00 PM
-                endMin: 1200,   // 08:00 PM
-                desc: "Aapki thaki-haari shaam ko ekdam jabardast aur energetic banane ke liye hazir hain RJ Muskan! Non-stop music aur mind-blowing tracks ke sath dhasu masti.",
-                elementId: "sch-muskan",
-                statusId: "stat-muskan"
-            },
-            {
-                rj: "RJ Mansi",
-                show: "Night Cafe",
-                startMin: 1200, // 08:00 PM
-                endMin: 1380,   // 11:00 PM
-                desc: "Din bhar ki bhaag-daud aur thakan ke baad, dimag ko behtareen sukoon dene, madhur sangeet aur pyaari baaton me khone ke liye suniye Night Cafe show.",
-                elementId: "sch-mansi",
-                statusId: "stat-mansi"
-            },
-            {
-                rj: "DJ Damroo Remix",
-                show: "Damroo Non-Stop Hits",
-                startMin: 1380, // 11:00 PM
-                endMin: 390,    // 06:30 AM (crosses midnight)
-                desc: "Late night lovers ke liye behtareen non-stop romantic, slow aur remix tracks jo aapki raaton ko dhasu aur surili banayenge.",
-                elementId: "sch-offtime",
-                statusId: "stat-offtime"
-            }
-        ];
-
-        // --- 2. DYNAMIC REAL-TIME SCHEDULING ENGINE ---
+        // --- 1. DYNAMIC REAL-TIME WEEKDAYS & WEEKENDS SCHEDULING ENGINE ---
         function updateShowScheduler() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const currentTotalMinutes = (hours * 60) + minutes;
+            try {
+                const now = new Date();
+                const day = now.getDay(); // 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const currentTotalMinutes = (hours * 60) + minutes;
 
-            // Reset all rows
-            document.querySelectorAll('.schedule-row').forEach(row => row.classList.remove('active'));
-            document.querySelectorAll('.schedule-status').forEach(status => status.innerText = "OFF AIR");
+                // Reset all table rows and badges safely
+                document.querySelectorAll('.schedule-row').forEach(row => row.classList.remove('active'));
+                document.querySelectorAll('.schedule-status').forEach(status => status.innerText = "OFF AIR");
 
-            let activeShow = null;
+                // Default Late Night Active Object
+                let activeShow = {
+                    show: "Damroo Late Night Hits",
+                    rj: "DJ Damroo Remix",
+                    desc: "Late night lovers ke liye behtareen non-stop romantic, slow aur remix tracks jo aapki raaton ko dhasu aur surili banayenge.",
+                    elementId: "sch-offtime",
+                    statusId: "stat-offtime"
+                };
 
-            // Find current active show
-            showsData.forEach(item => {
-                if (item.startMin < item.endMin) {
-                    if (currentTotalMinutes >= item.startMin && currentTotalMinutes < item.endMin) {
-                        activeShow = item;
-                    }
-                } else {
-                    // Late Night crosses midnight (23:00 to 06:30)
-                    if (currentTotalMinutes >= item.startMin || currentTotalMinutes < item.endMin) {
-                        activeShow = item;
+                // Everyday morning (6:30 AM to 11:00 AM) -> 390 to 660 mins
+                if (currentTotalMinutes >= 390 && currentTotalMinutes < 660) {
+                    activeShow = {
+                        show: "Waah Re Etawah",
+                        rj: "RJ Shouhadra",
+                        desc: "Suniye Etawah ka sabse dhasu morning show jo aapki subah ko behad haseen, energetic aur surili bana deta hai! Sirf aur sirf Radio Damroo par.",
+                        elementId: "sch-shouhadra",
+                        statusId: "stat-shouhadra"
+                    };
+                }
+                
+                // SUNDAY SCHEDULE
+                else if (day === 0) {
+                    if (currentTotalMinutes >= 660 && currentTotalMinutes < 1020) {
+                        activeShow = { 
+                            show: "Podcast by Komal Nahta", 
+                            rj: "Komal Nahta", 
+                            desc: "Suniye Bollywood aur entertainment ki ansuni kahaniyan aur behtareen guftagu Komal Nahta ke premium show par Sunday special.", 
+                            elementId: "sch-komal", 
+                            statusId: "stat-komal" 
+                        };
+                    } else if (currentTotalMinutes >= 1020 && currentTotalMinutes < 1200) {
+                        activeShow = { 
+                            show: "Weekend Masala", 
+                            rj: "RJ Mohini", 
+                            desc: "Aapke Sunday ki shaam ko masaledar aur mazedar banane ke liye hazir hain RJ Mohini dhasu gaano ke sath!", 
+                            elementId: "sch-mohini", 
+                            statusId: "stat-mohini" 
+                        };
+                    } else if (currentTotalMinutes >= 1200 && currentTotalMinutes < 1380) {
+                        activeShow = { 
+                            show: "Full Volume", 
+                            rj: "Radio Damroo Special", 
+                            desc: "Sunday ki raat ko banaiye musical aur super-hit! Full Volume show me non-stop blasting tracks sirf aapke liye.", 
+                            elementId: "sch-fullvolume", 
+                            statusId: "stat-fullvolume" 
+                        };
                     }
                 }
-            });
+                
+                // SATURDAY SCHEDULE
+                else if (day === 6) {
+                    if (currentTotalMinutes >= 660 && currentTotalMinutes < 840) {
+                        activeShow = { 
+                            show: "The Extraordinary", 
+                            rj: "RJ Khushbu", 
+                            desc: "Suniye bemisaal aur extraordinary baatein, shandaar music aur interesting kahaniyan RJ Khushbu ke sath Saturday bash me.", 
+                            elementId: "sch-khushbu", 
+                            statusId: "stat-khushbu" 
+                        };
+                    } else if (currentTotalMinutes >= 840 && currentTotalMinutes < 1020) {
+                        activeShow = { 
+                            show: "Dopheri Adda", 
+                            rj: "RJ Kapil", 
+                            desc: "Kheliye mazedaar games aur suniye dher saari mastiyan, gossips aur superhit songs RJ Kapil ke sath Saturday afternoon me.", 
+                            elementId: "sch-kapil", 
+                            statusId: "stat-kapil" 
+                        };
+                    } else if (currentTotalMinutes >= 1020 && currentTotalMinutes < 1200) {
+                        activeShow = { 
+                            show: "Jabardast Evening", 
+                            rj: "RJ Muskan", 
+                            desc: "Aapki Saturday ki mast evening ko ekdam jabardast aur energetic banane ke liye hazir hain RJ Muskan!", 
+                            elementId: "sch-muskan", 
+                            statusId: "stat-muskan" 
+                        };
+                    } else if (currentTotalMinutes >= 1200 && currentTotalMinutes < 1380) {
+                        activeShow = { 
+                            show: "Full Volume", 
+                            rj: "Radio Damroo Special", 
+                            desc: "Saturday ki musical night ko banaiye blasting aur energetic! Non-stop hit tracks ke sath full volume enjoy.", 
+                            elementId: "sch-fullvolume", 
+                            statusId: "stat-fullvolume" 
+                        };
+                    }
+                }
+                
+                // WEEKDAYS SCHEDULE (Monday to Friday)
+                else {
+                    if (currentTotalMinutes >= 660 && currentTotalMinutes < 840) {
+                        activeShow = { 
+                            show: "The Extraordinary", 
+                            rj: "RJ Khushbu", 
+                            desc: "Suniye bemisaal aur extraordinary baatein, shandaar music aur interesting kahaniyan RJ Khushbu ke sath.", 
+                            elementId: "sch-khushbu", 
+                            statusId: "stat-khushbu" 
+                        };
+                    } else if (currentTotalMinutes >= 840 && currentTotalMinutes < 1020) {
+                        activeShow = { 
+                            show: "Dopheri Adda", 
+                            rj: "RJ Kapil", 
+                            desc: "Kheliye mazedaar games aur suniye dher saari mastiyan, gossips aur superhit songs RJ Kapil ke sath.", 
+                            elementId: "sch-kapil", 
+                            statusId: "stat-kapil" 
+                        };
+                    } else if (currentTotalMinutes >= 1020 && currentTotalMinutes < 1200) {
+                        activeShow = { 
+                            show: "Jabardast Evening", 
+                            rj: "RJ Muskan", 
+                            desc: "Aapki thaki-haari shaam ko ekdam jabardast aur energetic banane ke liye hazir hain RJ Muskan!", 
+                            elementId: "sch-muskan", 
+                            statusId: "stat-muskan" 
+                        };
+                    } else if (currentTotalMinutes >= 1200 && currentTotalMinutes < 1380) {
+                        activeShow = { 
+                            show: "Night Cafe", 
+                            rj: "RJ Mansi", 
+                            desc: "Din bhar ki bhaag-daud aur thakan ke baad, dimag ko behtareen sukoon dene ke liye suniye Night Cafe show RJ Mansi ke sath.", 
+                            elementId: "sch-mansi", 
+                            statusId: "stat-mansi" 
+                        };
+                    }
+                }
 
-            // Fallback just in case
-            if (!activeShow) {
-                activeShow = showsData[showsData.length - 1];
+                // Everyday Late Night Non-Stop Music (11:00 PM - 12:00 AM) -> 1380 to 1440 mins
+                if (currentTotalMinutes >= 1380 && currentTotalMinutes < 1440) {
+                    activeShow = {
+                        show: "Non-Stop Music",
+                        rj: "DJ Damroo",
+                        desc: "Pure 1 ghante bina kisi ad ya break ke lagatar non-stop superhit gaane suniye sirf Radio Damroo par everyday.",
+                        elementId: "sch-nonstop",
+                        statusId: "stat-nonstop"
+                    };
+                }
+
+                // Update Main Live Player Card Text UI elements safely
+                const titleEl = document.getElementById('current-show-title');
+                const rjEl = document.getElementById('current-rj-name');
+                const descEl = document.getElementById('current-show-description');
+
+                if (titleEl) titleEl.innerText = activeShow.show;
+                if (rjEl) rjEl.innerHTML = `<i class="fa-solid fa-microphone-lines"></i> <span>${activeShow.rj}</span>`;
+                if (descEl) descEl.innerText = activeShow.desc;
+
+                // Update Schedule Table Row Highlighting safely
+                const activeRow = document.getElementById(activeShow.elementId);
+                if (activeRow) activeRow.classList.add('active');
+
+                const activeStatus = document.getElementById(activeShow.statusId);
+                if (activeStatus) activeStatus.innerText = "LIVE NOW";
+
+            } catch (e) {
+                console.error("Scheduler Error: ", e);
             }
-
-            // Update Main Live Player Section with matching dynamic description
-            document.getElementById('current-show-title').innerText = activeShow.show;
-            document.getElementById('current-rj-name').innerHTML = `<i class="fa-solid fa-microphone-lines"></i> <span>${activeShow.rj}</span>`;
-            document.getElementById('current-show-description').innerText = activeShow.desc;
-
-            // Update Schedule visual table row
-            const activeRow = document.getElementById(activeShow.elementId);
-            if (activeRow) activeRow.classList.add('active');
-
-            const activeStatus = document.getElementById(activeShow.statusId);
-            if (activeStatus) activeStatus.innerText = "LIVE NOW";
         }
 
-        // --- 3. COMMENTS & LOCAL STORAGE SYSTEM ---
+        // --- COMMENTS & LOCAL STORAGE SYSTEM ---
         function postListenerComment(e) {
             e.preventDefault();
             const nameField = document.getElementById('username-input');
@@ -957,13 +1023,14 @@
 
         function renderChatsList() {
             const chatBox = document.getElementById('comments-box-list');
+            if (!chatBox) return;
+
             let comments = localStorage.getItem('damroo_l_chats') ? JSON.parse(localStorage.getItem('damroo_l_chats')) : [];
 
             if (comments.length === 0) {
                 comments = [
                     { name: "Aman Dixit", msg: "Jabardast Evening show ekdam dhasu hai, RJ Muskan rock!", time: "05:40 PM" },
-                    { name: "Nisha Dixit", msg: "RJ Khushbu please play latest Bollywood romantic hit song!", time: "01:20 PM" },
-                    { name: "Prashant Etawah", msg: "Radio Damroo pure UP me sabse shaandar digital radio station hai.", time: "11:15 AM" }
+                    { name: "Nisha Dixit", msg: "Radio Damroo pure UP me sabse shaandar digital radio station hai.", time: "01:20 PM" }
                 ];
                 localStorage.setItem('damroo_l_chats', JSON.stringify(comments));
             }
@@ -977,11 +1044,30 @@
             `).join('');
         }
 
-        // --- 4. ENGINE INIT ---
+        // --- ENGINE INIT & CASTER EMBED FALLBACK DETECTOR ---
         window.addEventListener('DOMContentLoaded', () => {
             updateShowScheduler();
             renderChatsList();
-            setInterval(updateShowScheduler, 30000);
+            setInterval(updateShowScheduler, 15000); // Live tracking updates every 15 seconds
+
+            // Fallback Verification: If the Caster.fm script is blocked, render the direct responsive iframe
+            setTimeout(() => {
+                const container = document.getElementById('caster-container');
+                if (!container) return;
+                
+                const embedEl = container.querySelector('.cstrEmbed');
+                
+                // If the widget is not rendered (still has no iframe inside it)
+                if (embedEl && embedEl.getAttribute('data-rendered') !== 'true' && !container.querySelector('iframe')) {
+                    console.log("Caster.fm JS Widget blocked. Loading stable iframe fallback...");
+                    container.innerHTML = `
+                        <iframe src="https://player.caster.fm/index.php?publicToken=a8bf4b8e-212c-44ad-bc0c-bfa56c04a2a1" 
+                                style="width: 100%; height: 100px; border: none; background: transparent; overflow: hidden;" 
+                                scrolling="no">
+                        </iframe>
+                    `;
+                }
+            }, 2000); // 2 seconds timeout to detect blockages securely
         });
     </script>
 </body>
