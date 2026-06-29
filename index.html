@@ -40,7 +40,9 @@
             <img src="logo.png" alt="Radio Damroo" class="h-28 mx-auto mb-6 object-contain">
             <h2 class="text-2xl font-bold font-display text-white mb-2">89.6 Radio Damroo</h2>
             <p class="text-xs text-brand-yellow tracking-widest uppercase font-semibold mb-6">Halla Har Dil Mein</p>
-            <audio id="radio-audio" src="https://damroo.ismyradio.com/;" crossorigin="anonymous"></audio>
+            
+            <audio id="radio-audio" preload="none"></audio>
+            
             <button id="play-btn" onclick="togglePlay()" class="w-20 h-20 bg-gradient-to-r from-brand-red to-brand-yellow text-neutral-950 text-2xl rounded-full mx-auto flex items-center justify-center shadow-lg transform active:scale-95 transition-all">
                 <i id="play-icon" class="fa-solid fa-play ml-1"></i>
             </button>
@@ -55,55 +57,55 @@
         const status = document.getElementById('status');
         let isPlaying = false;
 
+        // IsMyRadio direct icecast stream links ke teen alag alag backup
+        const streamUrls = [
+            "http://damroo.ismyradio.com:8000/stream",
+            "http://damroo.ismyradio.com/;stream.mp3",
+            "https://damroo.ismyradio.com/;"
+        ];
+        let currentStreamIndex = 0;
+
         function togglePlay() {
             if (isPlaying) {
                 audio.pause();
+                audio.src = ""; // Clear buffer
                 isPlaying = false;
                 playIcon.className = "fa-solid fa-play ml-1";
                 status.innerText = "Paused";
             } else {
                 status.innerText = "Connecting...";
+                
+                // Set the current stream URL
+                audio.src = streamUrls[currentStreamIndex];
+                
                 audio.play().then(() => {
                     isPlaying = true;
                     playIcon.className = "fa-solid fa-pause";
                     status.innerText = "Halla Chalu Hai!";
                 }).catch(err => {
-                    status.innerText = "Error connecting to stream.";
+                    console.log("Stream failed, trying backup link...");
+                    // Try next backup link if first one fails
+                    currentStreamIndex = (currentStreamIndex + 1) % streamUrls.length;
+                    audio.src = streamUrls[currentStreamIndex];
+                    
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        playIcon.className = "fa-solid fa-pause";
+                        status.innerText = "Halla Chalu Hai!";
+                    }).catch(e => {
+                        status.innerText = "Stream offline hai ya proxy issue hai.";
+                    });
                 });
             }
         }
 
-        // Actual Live Listener Counter from IsMyRadio (With Proxy to avoid CORS error)
-        function fetchLiveListeners() {
-            const statusUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://damroo.ismyradio.com/status-json.xsl');
-
-            fetch(statusUrl)
-            .then(response => response.json())
-            .then(data => {
-                const jsonData = JSON.parse(data.contents);
-                if(jsonData && jsonData.icestats && jsonData.icestats.source) {
-                    let listeners = 0;
-                    const source = jsonData.icestats.source;
-                    
-                    if (Array.isArray(source)) {
-                        source.forEach(src => listeners += (src.listeners || 0));
-                    } else {
-                        listeners = source.listeners || 0;
-                    }
-                    
-                    // Agar real listener 0 hon toh base standard 150+ karke dikhayega jo professional lage
-                    let finalCount = listeners === 0 ? 3485 : (listeners + 150);
-                    document.getElementById('listener-count').innerText = finalCount.toLocaleString('en-US'); 
-                }
-            })
-            .catch(err => {
-                console.log("Real fetch error, standard view active.");
-            });
-        }
-
-        // Har 10 second me background me update karega
-        setInterval(fetchLiveListeners, 10000);
-        fetchLiveListeners(); // Page khulte hi run hoga
+        // Fake Counter Back-up functions
+        let currentListeners = 3485;
+        setInterval(() => {
+            const change = Math.floor(Math.random() * 7) - 3; 
+            currentListeners += change;
+            document.getElementById('listener-count').innerText = currentListeners.toLocaleString('en-US');
+        }, 5000);
     </script>
 </body>
 </html>
