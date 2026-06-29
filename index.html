@@ -668,4 +668,370 @@
         <section id="about">
             <h2 class="section-title">Radio Damroo Ke Baare Mein</h2>
             <div class="about-box">
-                <p><strong>Radio Damroo</strong> Etawah shehar ka sabse behtareen aur hit digital radio station hai. Hamara uddeshya aapko pure non-stop high-quality music aur entertainment se jode rakhna hai. Hamare sabhi RJs alag-alag unique concepts aur shows
+                <p><strong>Radio Damroo</strong> Etawah shehar ka sabse behtareen aur hit digital radio station hai. Hamara uddeshya aapko pure non-stop high-quality music aur entertainment se jode rakhna hai. Hamare sabhi RJs alag-alag unique concepts aur shows ke sath 24 ghante live rahte hain.</p>
+                <p>Hamari website aur android platforms ke jariye hum digital media me sabse saaf aur behtareen sound experience deliver karte hain. Damroo bajega toh entertainment badhega!</p>
+            </div>
+        </section>
+
+        <section id="shows">
+            <h2 class="section-title">Hamare Superhit Shows</h2>
+            <div class="grid-layout">
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-cloud-sun"></i></div>
+                    <h3>Waah Re Etawah</h3>
+                    <div class="show-rj">RJ Shouhadra</div>
+                    <div class="show-time">06:30 AM - 11:00 AM</div>
+                </div>
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-award"></i></div>
+                    <h3>The Extraordinary</h3>
+                    <div class="show-rj">RJ Khushbu</div>
+                    <div class="show-time">11:00 AM - 02:00 PM</div>
+                </div>
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-users"></i></div>
+                    <h3>Dopheri Adda</h3>
+                    <div class="show-rj">RJ Kapil</div>
+                    <div class="show-time">02:00 PM - 05:00 PM</div>
+                </div>
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Jabardast Evening</h3>
+                    <div class="show-rj">RJ Muskan</div>
+                    <div class="show-time">05:00 PM - 08:00 PM</div>
+                </div>
+                <div class="show-card">
+                    <div class="show-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                    <h3>Night Cafe</h3>
+                    <div class="show-rj">RJ Mansi</div>
+                    <div class="show-time">08:00 PM - 11:00 PM</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule">
+            <h2 class="section-title">Show Scheduling</h2>
+            <div class="schedule-box">
+                <div class="schedule-row" id="sch-shouhadra">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 06:30 - 11:00</div>
+                    <div class="schedule-show">Waah Re Etawah</div>
+                    <div class="schedule-rj">RJ Shouhadra</div>
+                    <div class="schedule-status" id="stat-shouhadra">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-khushbu">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 11:00 - 14:00</div>
+                    <div class="schedule-show">The Extraordinary</div>
+                    <div class="schedule-rj">RJ Khushbu</div>
+                    <div class="schedule-status" id="stat-khushbu">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-kapil">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 14:00 - 17:00</div>
+                    <div class="schedule-show">Dopheri Adda</div>
+                    <div class="schedule-rj">RJ Kapil</div>
+                    <div class="schedule-status" id="stat-kapil">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-muskan">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 17:00 - 20:00</div>
+                    <div class="schedule-show">Jabardast Evening</div>
+                    <div class="schedule-rj">RJ Muskan</div>
+                    <div class="schedule-status" id="stat-muskan">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-mansi">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 20:00 - 23:00</div>
+                    <div class="schedule-show">Night Cafe</div>
+                    <div class="schedule-rj">RJ Mansi</div>
+                    <div class="schedule-status" id="stat-mansi">OFF AIR</div>
+                </div>
+                <div class="schedule-row" id="sch-offtime">
+                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 23:00 - 06:30</div>
+                    <div class="schedule-show">Damroo Non-Stop Hits</div>
+                    <div class="schedule-rj">DJ Damroo Remix</div>
+                    <div class="schedule-status" id="stat-offtime">OFF AIR</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comments">
+            <h2 class="section-title">Live Listeners Chat</h2>
+            <div class="comments-container">
+                <form class="comment-form" onsubmit="postListenerComment(event)">
+                    <div class="input-group">
+                        <label for="username-input">Aapka Name</label>
+                        <input type="text" id="username-input" placeholder="Jaise: Aman Dixit" required />
+                    </div>
+                    <div class="input-group">
+                        <label for="message-input">Apna Pyara Message / Song Request</label>
+                        <textarea id="message-input" rows="4" placeholder="Apna message likhein..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn"><i class="fa-regular fa-paper-plane"></i> Message Post Karein</button>
+                </form>
+
+                <div class="comments-list-wrapper">
+                    <h4 style="margin-bottom: 12px; color: var(--primary-yellow);"><i class="fa-regular fa-comments"></i> Listeners Feed:</h4>
+                    <div id="comments-box-list">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 <span>Radio Damroo</span>. Sabhi Adhikar Surakshit Hain. Designed for Etawah Premium Broadcast.</p>
+    </footer>
+
+    <script>
+        const audioStream = document.getElementById('audio-stream');
+        const playBtnIcon = document.getElementById('play-icon');
+        const playTrigger = document.getElementById('play-trigger');
+        const wavesBox = document.getElementById('visualizer-waves');
+        const streamUrlField = document.getElementById('stream-url-field');
+
+        // --- 1. SHOW DATA & CONFIGURATION ---
+        const showsData = [
+            {
+                rj: "RJ Shouhadra",
+                show: "Waah Re Etawah",
+                startMin: 390,  // 06:30 AM
+                endMin: 660,    // 11:00 AM
+                desc: "Suniye Etawah ka sabse dhasu morning show jo aapki subah ko behad haseen, energetic aur surili bana deta hai! Sirf aur sirf Radio Damroo par.",
+                elementId: "sch-shouhadra",
+                statusId: "stat-shouhadra"
+            },
+            {
+                rj: "RJ Khushbu",
+                show: "The Extraordinary",
+                startMin: 660,  // 11:00 AM
+                endMin: 840,    // 02:00 PM
+                desc: "Suniye bemisaal aur extraordinary baatein, shandaar music aur intersting kahaniyan jo aapke dophar ko ek naye excitement se bhar degi!",
+                elementId: "sch-khushbu",
+                statusId: "stat-khushbu"
+            },
+            {
+                rj: "RJ Kapil",
+                show: "Dopheri Adda",
+                startMin: 840,  // 02:00 PM
+                endMin: 1020,   // 05:00 PM
+                desc: "Dophar ki dhoop me thandi hawa jaisa asar! Kheliye mazedaar games aur suniye dher saari mastiyan, gossips aur superhit songs RJ Kapil ke sath.",
+                elementId: "sch-kapil",
+                statusId: "stat-kapil"
+            },
+            {
+                rj: "RJ Muskan",
+                show: "Jabardast Evening",
+                startMin: 1020, // 05:00 PM
+                endMin: 1200,   // 08:00 PM
+                desc: "Aapki thaki-haari shaam ko ekdam jabardast aur energetic banane ke liye hazir hain RJ Muskan! Non-stop music aur mind-blowing tracks ke sath dhasu masti.",
+                elementId: "sch-muskan",
+                statusId: "stat-muskan"
+            },
+            {
+                rj: "RJ Mansi",
+                show: "Night Cafe",
+                startMin: 1200, // 08:00 PM
+                endMin: 1380,   // 11:00 PM
+                desc: "Din bhar ki bhaag-daud aur thakan ke baad, dimag ko behtareen sukoon dene, madhur sangeet aur pyaari baaton me khone ke liye suniye Night Cafe show.",
+                elementId: "sch-mansi",
+                statusId: "stat-mansi"
+            },
+            {
+                rj: "DJ Damroo Remix",
+                show: "Damroo Non-Stop Hits",
+                startMin: 1380, // 11:00 PM
+                endMin: 390,    // 06:30 AM (crosses midnight)
+                desc: "Late night lovers ke liye behtareen non-stop romantic, slow aur remix tracks jo aapki raaton ko dhasu aur surili banayenge.",
+                elementId: "sch-offtime",
+                statusId: "stat-offtime"
+            }
+        ];
+
+        // Backup reliable streams for seamless testing if Zeno falls offline
+        const fallbackStreams = [
+            "https://stream.zeno.fm/f9t7t888w0euv", // Primary Custom Stream
+            "https://pub1.bcast.fm/live.mp3",       // Global Radio stream backup
+            "https://stream.live.vc/melodia"        // Alternative backup stream
+        ];
+        let currentBackupIndex = 0;
+
+        // --- 2. DYNAMIC REAL-TIME SCHEDULING ENGINE ---
+        function updateShowScheduler() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTotalMinutes = (hours * 60) + minutes;
+
+            // Reset all rows
+            document.querySelectorAll('.schedule-row').forEach(row => row.classList.remove('active'));
+            document.querySelectorAll('.schedule-status').forEach(status => status.innerText = "OFF AIR");
+
+            let activeShow = null;
+
+            // Find current active show
+            showsData.forEach(item => {
+                if (item.startMin < item.endMin) {
+                    if (currentTotalMinutes >= item.startMin && currentTotalMinutes < item.endMin) {
+                        activeShow = item;
+                    }
+                } else {
+                    // Late Night crosses midnight (23:00 to 06:30)
+                    if (currentTotalMinutes >= item.startMin || currentTotalMinutes < item.endMin) {
+                        activeShow = item;
+                    }
+                }
+            });
+
+            // Fallback just in case
+            if (!activeShow) {
+                activeShow = showsData[showsData.length - 1];
+            }
+
+            // Update Main Live Player Section
+            document.getElementById('current-show-title').innerText = activeShow.show;
+            document.getElementById('current-rj-name').innerHTML = `<i class="fa-solid fa-microphone-lines"></i> <span>${activeShow.rj}</span>`;
+            document.getElementById('current-show-description').innerText = activeShow.desc;
+
+            // Update Schedule visual table row
+            const activeRow = document.getElementById(activeShow.elementId);
+            if (activeRow) activeRow.classList.add('active');
+
+            const activeStatus = document.getElementById(activeShow.statusId);
+            if (activeStatus) activeStatus.innerText = "LIVE NOW";
+        }
+
+        // --- 3. CUSTOM PLAYER LOGIC ---
+        let isConnecting = false;
+
+        function handlePlayToggle() {
+            if (audioStream.paused) {
+                if (isConnecting) return;
+
+                // UI feedback that we are loading/connecting
+                isConnecting = true;
+                playBtnIcon.className = "fa-solid fa-spinner fa-spin";
+                
+                let primarySource = streamUrlField.value.trim();
+                
+                // Semicolon appending hack for raw Icecast streams to play on mobile browsers smoothly
+                if (primarySource.includes("zeno.fm") && !primarySource.includes(";")) {
+                    if (!primarySource.endsWith("/")) {
+                        primarySource += "/";
+                    }
+                }
+
+                audioStream.src = primarySource;
+                audioStream.load();
+
+                // Play Audio Stream
+                audioStream.play()
+                    .then(() => {
+                        isConnecting = false;
+                        playBtnIcon.className = "fa-solid fa-pause";
+                        wavesBox.classList.add('playing');
+                    })
+                    .catch(err => {
+                        console.warn("Primary stream link failed, loading backup source...", err);
+                        tryFallbackStream();
+                    });
+            } else {
+                audioStream.pause();
+                audioStream.src = ""; // Clear source to immediately kill browser background download
+                playBtnIcon.className = "fa-solid fa-play";
+                wavesBox.classList.remove('playing');
+                isConnecting = false;
+            }
+        }
+
+        // Automatic seamless backup trigger
+        function tryFallbackStream() {
+            currentBackupIndex++;
+            if (currentBackupIndex < fallbackStreams.length) {
+                const nextSource = fallbackStreams[currentBackupIndex];
+                
+                audioStream.src = nextSource;
+                audioStream.play()
+                    .then(() => {
+                        isConnecting = false;
+                        playBtnIcon.className = "fa-solid fa-pause";
+                        wavesBox.classList.add('playing');
+                        streamUrlField.value = nextSource;
+                    })
+                    .catch(() => {
+                        tryFallbackStream();
+                    });
+            } else {
+                isConnecting = false;
+                playBtnIcon.className = "fa-solid fa-play";
+                wavesBox.classList.remove('playing');
+                currentBackupIndex = 0; // Reset
+                alert("Radio Damroo stream connect nahi ho pa rahi hai. Kripya URL check karein ya internet refresh karein!");
+            }
+        }
+
+        function adjustVolume(val) {
+            audioStream.volume = val;
+        }
+
+        function updateCustomStream(url) {
+            audioStream.pause();
+            audioStream.src = url;
+            playBtnIcon.className = "fa-solid fa-play";
+            wavesBox.classList.remove('playing');
+            isConnecting = false;
+        }
+
+        // --- 4. COMMENTS SYSTEM ---
+        function postListenerComment(e) {
+            e.preventDefault();
+            const nameField = document.getElementById('username-input');
+            const msgField = document.getElementById('message-input');
+
+            const cleanName = nameField.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const cleanMsg = msgField.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            if(!cleanName || !cleanMsg) return;
+
+            const newComment = {
+                name: cleanName,
+                msg: cleanMsg,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            let comments = localStorage.getItem('damroo_l_chats') ? JSON.parse(localStorage.getItem('damroo_l_chats')) : [];
+            comments.unshift(newComment);
+            localStorage.setItem('damroo_l_chats', JSON.stringify(comments.slice(0, 30)));
+
+            msgField.value = "";
+            renderChatsList();
+        }
+
+        function renderChatsList() {
+            const chatBox = document.getElementById('comments-box-list');
+            let comments = localStorage.getItem('damroo_l_chats') ? JSON.parse(localStorage.getItem('damroo_l_chats')) : [];
+
+            if (comments.length === 0) {
+                comments = [
+                    { name: "Suresh Sahu", msg: "Dopheri Adda show ekdam dhasu hai, Kapil bhaiya rock!", time: "03:40 PM" },
+                    { name: "Nisha Dixit", msg: "RJ Khushbu please play latest Bollywood romantic hit song!", time: "01:20 PM" },
+                    { name: "Prashant Etawah", msg: "Radio Damroo pure UP me sabse shaandar digital radio station hai.", time: "11:15 AM" }
+                ];
+                localStorage.setItem('damroo_l_chats', JSON.stringify(comments));
+            }
+
+            chatBox.innerHTML = comments.map(c => `
+                <div class="comment-item">
+                    <span class="comment-user">${c.name}</span>
+                    <span class="comment-time">${c.time}</span>
+                    <div class="comment-msg">${c.msg}</div>
+                </div>
+            `).join('');
+        }
+
+        // --- 5. ENGINES INIT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            updateShowScheduler();
+            renderChatsList();
+            setInterval(updateShowScheduler, 30000);
+        });
+    </script>
+</body>
+</html>
