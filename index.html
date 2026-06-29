@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>89.6 Radio Damroo - Halla Har Dil Mein</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        display: ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#E13B30',      // Logo Red
+                            yellow: '#F1BE3B',   // Logo Yellow
+                            dark: '#0A0A0E',     // Pitch Dark Black
+                            card: '#14141A',     // Card Background
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom glow effects and scrollbar styling matching Red & Yellow */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #200b0b 0%, #050508 100%);
+        }
+        .glow-red-yellow {
+            text-shadow: 0 0 10px rgba(241, 190, 59, 0.5), 0 0 20px rgba(225, 59, 48, 0.3);
+        }
+        .glow-box-red {
+            box-shadow: 0 4px 20px rgba(225, 59, 48, 0.15);
+        }
+        .glow-box-yellow {
+            box-shadow: 0 0 25px rgba(241, 190, 59, 0.12);
+        }
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(241, 190, 59, 0.3);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(225, 59, 48, 0.6);
+        }
+    </style>
+</head>
+<body class="text-neutral-100 min-h-screen flex flex-col selection:bg-brand-red selection:text-white">
+
+    <!-- Top Premium Navigation Bar -->
+    <header class="border-b border-neutral-800/80 bg-black/70 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo Image (Replaced text with exact photo) -->
+            <div class="flex items-center cursor-pointer group" onclick="scrollToSection('player-section')">
+                <img src="1000016608.png" alt="89.6 Radio Damroo Logo" onerror="this.onerror=null; this.src='https://placehold.co/220x60/000000/F1BE3B?text=Radio+Damroo';" class="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
+            </div>
+
+            <!-- Current Show / Live Badge with Red Glowing Pulse -->
+            <div class="hidden md:flex items-center space-x-4 bg-neutral-900/80 py-2 px-5 rounded-full border border-neutral-800">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-red opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-red"></span>
+                </span>
+                <span class="text-xs font-semibold tracking-wider text-neutral-300 uppercase">Live: <span id="header-current-show" class="text-brand-yellow font-bold">Maha Dhamaka Hits</span></span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-3">
+                <button onclick="scrollToSection('request-section')" class="hidden sm:inline-flex bg-neutral-900 hover:bg-neutral-800 text-brand-yellow text-xs font-semibold px-4 py-2.5 rounded-lg border border-brand-yellow/20 transition duration-300">
+                    <i class="fa-solid fa-microphone mr-2 text-brand-red"></i> Request Song
+                </button>
+                <button onclick="scrollToSection('player-section')" class="bg-gradient-to-r from-brand-red to-brand-yellow hover:from-brand-yellow hover:to-brand-red text-neutral-950 text-xs font-bold px-5 py-2.5 rounded-lg shadow-lg transform active:scale-95 transition-all duration-300">
+                    <i class="fa-solid fa-play mr-1.5"></i> Listen Live
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Stream URL Settings (Easily changeable for admin) -->
+        <div class="bg-brand-card/40 border border-neutral-800/80 p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-red/10 p-2.5 rounded-lg text-brand-red">
+                    <i class="fa-solid fa-sliders text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-sm text-neutral-200">Radio Stream Control Center</h4>
+                    <p class="text-xs text-neutral-400">Aap yahan se apna custom streaming host/server instant update kar sakte hain.</p>
+                </div>
+            </div>
+            <div class="flex w-full md:w-auto items-center space-x-2">
+                <input id="stream-url-input" type="text" class="bg-neutral-950/80 border border-neutral-800 px-3 py-2 rounded-lg text-xs w-full md:w-80 focus:outline-none focus:border-brand-yellow text-neutral-300" value="https://damroo.ismyradio.com" placeholder="Apna stream URL dalein...">
+                <button onclick="updateStreamUrl()" class="bg-brand-yellow hover:bg-brand-yellow/90 text-neutral-950 font-bold px-4 py-2 rounded-lg text-xs transition duration-200 whitespace-nowrap">
+                    Update Stream
+                </button>
+            </div>
+        </div>
+
+        <!-- HERO & LIVE PLAYER SECTION -->
+        <section id="player-section" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- LEFT: Glassmorphic Main Radio Player Card (7 Columns) -->
+            <div class="lg:col-span-7 bg-brand-card/60 border border-neutral-800/60 rounded-3xl p-6 sm:p-8 flex flex-col justify-between glow-box-yellow relative overflow-hidden backdrop-blur-md">
+                
+                <!-- Background ambient glow -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-brand-yellow/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Live Status Header -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="bg-brand-red/20 border border-brand-red/30 text-brand-red text-[10px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-brand-red rounded-full animate-ping"></span>
+                        On Air - 89.6 FM
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs text-neutral-400 bg-neutral-950/60 px-3.5 py-1.5 rounded-full">
+                        <i class="fa-solid fa-headset text-brand-yellow"></i>
+                        <span id="listener-count" class="font-bold text-neutral-200">3,485</span> Sun rahe hain
+                    </div>
+                </div>
+
+                <!-- Show & Track Artwork + Details -->
+                <div class="flex flex-col sm:flex-row items-center gap-6 my-4">
+                    <!-- Rotating Vinyl Plate with Center Logo -->
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-brand-red to-brand-yellow rounded-full animate-spin [animation-duration:12s] opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <div id="art-container" class="w-36 h-36 rounded-full border-4 border-brand-red/20 p-1 flex items-center justify-center bg-black shadow-2xl relative z-10">
+                            <!-- Inner Vinyl Mimic containing the actual upload image inside the core center -->
+                            <div class="w-full h-full rounded-full bg-gradient-to-r from-neutral-800 via-neutral-950 to-neutral-800 flex items-center justify-center relative overflow-hidden">
+                                <div class="absolute w-14 h-14 bg-black rounded-full border border-brand-yellow/30 flex items-center justify-center z-20 overflow-hidden">
+                                    <img src="1000016608.png" alt="Damroo Logo Inside Player" class="w-full h-full object-contain">
+                                </div>
+                                <!-- Vinyl Spiral concentric rings -->
+                                <div class="absolute inset-0 rounded-full border border-neutral-700/20 m-2"></div>
+                                <div class="absolute inset-0 rounded-full border border-neutral-700/20 m-6"></div>
+                                <div class="absolute inset-0 rounded-full border border-neutral-700/20 m-10"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Track and Slogan text -->
+                    <div class="text-center sm:text-left flex-grow">
+                        <!-- Substituted text brand with dynamic small image context -->
+                        <div class="flex justify-center sm:justify-start mb-2">
+                            <img src="1000016608.png" alt="Radio Damroo Brand Logo" class="h-12 w-auto object-contain">
+                        </div>
+                        <p id="track-details" class="text-xs text-neutral-400 mt-2 italic">Aapka apna premium radio station, non-stop superhit gaane aur dhoom machate RJs ke sang.</p>
+                        
+                        <!-- Status Bar indicator -->
+                        <div id="play-status-label" class="mt-4 text-xs text-neutral-400 bg-neutral-950/80 inline-block px-3 py-1.5 rounded-lg border border-neutral-800">
+                            <i class="fa-solid fa-circle-play mr-1.5 text-brand-red"></i>Niche play button ko click karke live dhoom suniye!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RED/YELLOW AUDIO VISUALIZER WAVE -->
+                <div class="w-full my-6 bg-neutral-950/80 rounded-xl p-3 border border-neutral-800/60 relative">
+                    <span class="absolute top-2 left-3 text-[9px] text-neutral-500 uppercase tracking-widest font-semibold">Sound Wave Spectrometer</span>
+                    <canvas id="visualizer-canvas" class="w-full h-16 rounded-lg opacity-90"></canvas>
+                </div>
+
+                <!-- CONTROLS CONTAINER -->
+                <div class="space-y-4">
+                    <!-- Progress Bar Simulator -->
+                    <div class="flex items-center justify-between text-xs text-neutral-400 mb-1">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-tower-broadcast text-brand-red animate-pulse"></i> HD Stream Live Feed</span>
+                        <span id="player-time-elapsed" class="font-display">00:00:00</span>
+                    </div>
+
+                    <!-- Control Buttons Grid -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-neutral-950/80 p-4 rounded-2xl border border-neutral-800/80">
+                        <!-- Play/Pause & Actions -->
+                        <div class="flex items-center space-x-4">
+                            <!-- PLAY BUTTON (glowing red and yellow) -->
+                            <button id="play-btn" onclick="togglePlay()" class="w-14 h-14 bg-gradient-to-r from-brand-red to-brand-yellow hover:scale-105 active:scale-95 text-neutral-950 text-xl font-bold rounded-full flex items-center justify-center shadow-lg shadow-brand-red/30 transition-all duration-300">
+                                <i id="play-icon" class="fa-solid fa-play ml-1"></i>
+                            </button>
+                            <button onclick="stopAudio()" class="w-10 h-10 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white rounded-full flex items-center justify-center transition duration-200" title="Stop">
+                                <i class="fa-solid fa-stop"></i>
+                            </button>
+                            <button onclick="refreshAudio()" class="w-10 h-10 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white rounded-full flex items-center justify-center transition duration-200" title="Reconnect Server">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Audio Stream Element -->
+                        <audio id="radio-audio" src="" preload="none" crossorigin="anonymous"></audio>
+
+                        <!-- Volume Controls with logo yellow styling -->
+                        <div class="flex items-center space-x-3 w-full sm:w-auto min-w-[150px]">
+                            <button onclick="toggleMute()" id="mute-btn" class="text-neutral-400 hover:text-brand-yellow transition">
+                                <i id="mute-icon" class="fa-solid fa-volume-high"></i>
+                            </button>
+                            <input id="volume-range" type="range" min="0" max="1" step="0.05" value="0.8" oninput="setVolume(this.value)" class="w-full accent-brand-yellow bg-neutral-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                            <span id="volume-label" class="text-xs text-neutral-400 w-8">80%</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: PREMIUM LIVE CHAT (5 Columns) -->
+            <div class="lg:col-span-5 bg-brand-card/60 border border-neutral-800/60 rounded-3xl p-6 flex flex-col justify-between h-[480px] lg:h-auto glow-box-red relative overflow-hidden backdrop-blur-md">
+                
+                <!-- Chat Header -->
+                <div class="flex items-center justify-between border-b border-neutral-800 pb-3 mb-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
+                        <h3 class="font-bold text-sm tracking-wide text-white uppercase font-display">Listeners Live Room</h3>
+                    </div>
+                    <span id="online-chatters" class="text-xs text-neutral-400 font-medium bg-neutral-950 px-2.5 py-1 rounded-full">240 Chatting</span>
+                </div>
+
+                <!-- Chat Box Body -->
+                <div id="chat-messages-container" class="flex-grow overflow-y-auto space-y-3 pr-2 custom-scrollbar text-xs">
+                    <!-- Default Initial Chat messages inside stream -->
+                    <div class="bg-neutral-950/40 p-2.5 rounded-xl border border-neutral-800/40">
+                        <span class="font-bold text-brand-yellow">RJ Shivam:</span>
+                        <span class="text-neutral-200 ml-1">Pranam mere bhai-beheno! 89.6 Radio Damroo ke live chat section me aap sabhi ka swagat hai. Aaj ke show me aap kaunsa song sunna chahte hain, neeche request form ya fir chat me likhein! 🎙️🙏</span>
+                        <span class="block text-[8px] text-neutral-500 mt-1 text-right">03:25 PM</span>
+                    </div>
+                    <div class="bg-neutral-950/20 p-2.5 rounded-xl border border-neutral-800/20">
+                        <span class="font-bold text-neutral-300">Sumit Yadav:</span>
+                        <span class="text-neutral-400 ml-1">Radio Damroo ka halla ab pure shehar me goonjega! Awaz ekdum clear aa rahi hai streams par. Jai Jai Shiv Shambhu! 🔥</span>
+                        <span class="block text-[8px] text-neutral-500 mt-1 text-right">03:26 PM</span>
+                    </div>
+                    <div class="bg-neutral-950/20 p-2.5 rounded-xl border border-neutral-800/20">
+                        <span class="font-bold text-neutral-300">Pooja Sharma:</span>
+                        <span class="text-neutral-400 ml-1">"Halla Har Dil Mein"! Boht hi dhasu tagline hai logo me. Please ek energetic bhajan play kar dijiye RJ Priya ke aane par!</span>
+                        <span class="block text-[8px] text-neutral-500 mt-1 text-right">03:27 PM</span>
+                    </div>
+                </div>
+
+                <!-- Chat Input Section -->
+                <form id="chat-form" onsubmit="sendChatMessage(event)" class="mt-4 border-t border-neutral-800 pt-3">
+                    <div class="flex gap-2">
+                        <div class="flex-grow relative">
+                            <input id="chat-input" type="text" placeholder="Apna message likhein..." class="w-full bg-neutral-950 border border-neutral-800 focus:border-brand-yellow px-3.5 py-2.5 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none transition duration-200">
+                        </div>
+                        <button type="submit" class="bg-brand-red hover:bg-brand-red/90 text-white font-bold px-4 py-2.5 rounded-xl flex items-center justify-center shadow-md active:scale-95 transition-all">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <p class="text-[9px] text-neutral-500 mt-1.5 text-center"><i class="fa-solid fa-shield-halved text-brand-yellow"></i> Live portal shield active. Please keep comments healthy.</p>
+                </form>
+
+            </div>
+
+        </section>
+
+        <!-- TWO COLUMN ROW: ABOUT LOGO & QUICK STATION INFO -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- About the brand -->
+            <div class="bg-gradient-to-br from-brand-card to-neutral-950 border border-neutral-800/80 p-6 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                <div class="w-20 h-20 bg-black rounded-xl p-1 border border-brand-yellow/20 flex-shrink-0 flex items-center justify-center">
+                    <img src="1000016608.png" alt="Damroo Mini Logo" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-base mb-1">Hamare Logo Ki Pehchan</h3>
+                    <p class="text-xs text-neutral-400 leading-relaxed"><strong>89.6 Radio Damroo</strong> ka official logo traditional symbols aur modern electronic sound system ka sandhi-vichhed hai. Iska red aur yellow color pure energy aur devotinal faith ko humare dil tak pahunchata hai.</p>
+                </div>
+            </div>
+
+            <!-- Streaming Details -->
+            <div class="bg-gradient-to-br from-brand-card to-neutral-950 border border-neutral-800/80 p-6 rounded-2xl flex flex-col justify-between">
+                <div>
+                    <h3 class="font-bold text-white text-base mb-1">Official Frequency Broadcast</h3>
+                    <p class="text-xs text-neutral-4
